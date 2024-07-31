@@ -1,0 +1,32 @@
+services:
+  my-application-container:
+    image: my-catalog-demo
+    container_name: my-application-container
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_NAME: CatalogDemo
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-container:5432/catalog
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+    depends_on:
+      - postgres-container
+
+  postgres-container:
+    image: postgres:14
+    container_name: postgres-container
+    environment:
+      POSTGRES_DB: catalog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
